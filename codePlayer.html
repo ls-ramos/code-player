@@ -104,20 +104,28 @@
         <main>
             <section class="code-section" id="html-section">
                 <h1>i am html code</h1>
-                <textarea id="code-html" placeholder="&lt;p&gt;Hello i am html&lt;/p&gt;">&lt;p&gt;Hello i am html&lt;/p&gt;&#13;&#10;&lt;p id="text"&gt;i will be changed&lt;/p&gt;</textarea>
+                <div id="code-html" style="flex: 1">&lt;p&gt;Hello i am html&lt;/p&gt;
+                    &#13;&#10;&lt;p id="text"&gt;i will be changed&lt;/p&gt;
+                </div>
+                <!-- <textarea id="code-html" placeholder="&lt;p&gt;Hello i am html&lt;/p&gt;">&lt;p&gt;Hello i am html&lt;/p&gt;&#13;&#10;&lt;p id="text"&gt;i will be changed&lt;/p&gt;</textarea> -->
             </section>
 
             <section class="code-section" id="css-section">
                 <h1>i am css code</h1>
-                <textarea id="code-css" placeholder="p { color: green } ">p { color: green } </textarea>
+                <div id="code-css" style="flex: 1">p { color: green }</div>
+                <!-- <textarea id="code-css" placeholder="p { color: green } ">p { color: green } </textarea> -->
             </section>
 
             <section class="code-section" id="js-section">
                 <h1>i am javascript code</h1>
-                <textarea id="code-js" placeholder="console.log('i am javascript')">document.getElementById("text").innerHTML = "Hi i am JS !"</textarea>
+
+                <div id="code-js" style="flex: 1">document.getElementById("text").innerHTML = "Hi i am JS !"</div>
+                <!-- <textarea id="code-js" placeholder="console.log('i am javascript')">document.getElementById("text").innerHTML = "Hi i am JS !"</textarea> -->
             </section>
 
             <section class="code-section" id="out-section">
+                <h1>i am the output</h1>
+
                 <iframe id="output"></iframe>
             </section>
         </main>
@@ -128,7 +136,31 @@
         
         <!-- Import jquery -->
         <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+        <!-- Import ACE code text editor -->
+        <script src="ace-builds-master/src-noconflict/ace.js" type="text/javascript" charset="utf-8"></script>
         <script type="text/javascript">
+            // Config ACE code text editor
+            var htmlEditor = ace.edit("code-html");
+            htmlEditor.setTheme("ace/theme/monokai");
+            htmlEditor.session.setMode("ace/mode/html");
+            htmlEditor.session.on('change', function(delta) {
+                updateOutput();
+            });
+
+            var cssEditor = ace.edit("code-css");
+            cssEditor.setTheme("ace/theme/monokai");
+            cssEditor.session.setMode("ace/mode/css");
+            cssEditor.session.on('change', function(delta) {
+                updateOutput();
+            });
+
+            var jsEditor = ace.edit("code-js");
+            jsEditor.setTheme("ace/theme/monokai");
+            jsEditor.session.setMode("ace/mode/javascript");
+            jsEditor.session.on('change', function(delta) {
+                updateOutput();
+            });
+
             // handle buttons actions   
             $("#btn-html").click(function (){
                 $("#html-section").toggle();
@@ -148,9 +180,9 @@
 
             // handle on input events and create resulting html
             function updateOutput(){
-                let style = $("#code-css").val();
-                let html = $("#code-html").val();
-                let js = $("#code-js").val();
+                let style = cssEditor.getValue();
+                let html = htmlEditor.getValue();
+                let js = jsEditor.getValue();
                 let site = "<html><head><style type='text/css'>" + style + "</style></head><body>" + html + "</body></html>";
 
                 $("iframe").contents().find("html").html(site); // add html and css to iframe
