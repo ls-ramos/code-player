@@ -1,2 +1,2 @@
-# codePlayer
-A code interpreter of HTML, CSS and Javascript to learn how to program
+# Code Player
+A simple code interpreter of HTML, CSS and Javascript :) !
