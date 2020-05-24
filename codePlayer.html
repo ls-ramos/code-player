@@ -5,7 +5,7 @@
         <link rel="stylesheet" type="text/css" href="reset.css">
         <style type="text/css">
 
-            /* GERAL */
+            /* GENERAL */
             html, body{
                 height: 100%;
             }
@@ -20,7 +20,7 @@
 
             /* HEADER */        
             header{
-                background-color: rgb(180, 180, 180);
+                background-color: #1b1b1b;
                 display: flex;
                 align-items: center;
             }
@@ -30,6 +30,8 @@
                 font-weight: normal;
                 vertical-align: middle;
                 margin: 0.5vw;
+                color: #ffffff;
+                opacity: 50%;
             }
 
             #buttons-container{
@@ -37,9 +39,16 @@
             }
 
             #buttons button{
-                border: 1px solid black;
+                border: none;
                 border-radius: 5px;
-                font-size: 150%;
+            
+                padding: 5px 10px 5px 10px;
+                
+                font-size: 130%;
+                color: white;
+                opacity: 60%;
+                margin-left: 10px;
+                background-color: #424242;
             }
 
             #buttons{
@@ -52,6 +61,20 @@
             main{
                 display: flex;
                 flex: 1;
+                background-color: black;
+            }
+
+            .code-title {
+                color: rgb(255, 255, 255, .6);
+                background-color: #424242;
+            }
+
+            #code-html, #code-css, #code-js {
+                font-size: 16px;
+            }
+
+            #out-section{
+                background-color: white;
             }
 
             .code-section{
@@ -59,6 +82,7 @@
                 flex: 1;
                 display: flex;
                 flex-direction: column;
+                border-right: solid 1px black;
             }
 
             .code-section textarea {
@@ -88,7 +112,6 @@
         
         <header>
             <p id="logo">CODE PLAYER</h1>
-
             <section id="buttons-container">
                 <span id="buttons">
                     <button id="btn-html">HTML</button>
@@ -99,33 +122,24 @@
             </section>
         </header>
 
-        
-    
         <main>
             <section class="code-section" id="html-section">
-                <h1>i am html code</h1>
-                <div id="code-html" style="flex: 1">&lt;p&gt;Hello i am html&lt;/p&gt;
-                    &#13;&#10;&lt;p id="text"&gt;i will be changed&lt;/p&gt;
-                </div>
-                <!-- <textarea id="code-html" placeholder="&lt;p&gt;Hello i am html&lt;/p&gt;">&lt;p&gt;Hello i am html&lt;/p&gt;&#13;&#10;&lt;p id="text"&gt;i will be changed&lt;/p&gt;</textarea> -->
+                <h1 class="code-title">html code</h1>
+                <div id="code-html" style="flex: 1;"></div>
             </section>
 
             <section class="code-section" id="css-section">
-                <h1>i am css code</h1>
-                <div id="code-css" style="flex: 1">p { color: green }</div>
-                <!-- <textarea id="code-css" placeholder="p { color: green } ">p { color: green } </textarea> -->
+                <h1 class="code-title">css code</h1>
+                <div id="code-css" style="flex: 1"></div>
             </section>
 
             <section class="code-section" id="js-section">
-                <h1>i am javascript code</h1>
-
-                <div id="code-js" style="flex: 1">document.getElementById("text").innerHTML = "Hi i am JS !"</div>
-                <!-- <textarea id="code-js" placeholder="console.log('i am javascript')">document.getElementById("text").innerHTML = "Hi i am JS !"</textarea> -->
+                <h1 class="code-title">javascript code</h1>
+                <div id="code-js" style="flex: 1"></div>
             </section>
 
             <section class="code-section" id="out-section">
-                <h1>i am the output</h1>
-
+                <h1 class="code-title">Output</h1>
                 <iframe id="output"></iframe>
             </section>
         </main>
@@ -140,6 +154,8 @@
         <script src="ace-builds-master/src-noconflict/ace.js" type="text/javascript" charset="utf-8"></script>
         <script type="text/javascript">
             // Config ACE code text editor
+            var fontSize = "20px";
+
             var htmlEditor = ace.edit("code-html");
             htmlEditor.setTheme("ace/theme/monokai");
             htmlEditor.session.setMode("ace/mode/html");
@@ -152,7 +168,7 @@
             cssEditor.session.setMode("ace/mode/css");
             cssEditor.session.on('change', function(delta) {
                 updateOutput();
-            });
+            }); 
 
             var jsEditor = ace.edit("code-js");
             jsEditor.setTheme("ace/theme/monokai");
@@ -160,40 +176,54 @@
             jsEditor.session.on('change', function(delta) {
                 updateOutput();
             });
-
+            
+            //set default codes
+            htmlEditor.setValue("<h1>Welcome to CodePlayer</h1>\n<p>i am inside HTML tag body</p>\n<p id='text'>i will be changed</p>\n",1);
+            cssEditor.setValue("p { color: green } \n\nbody {\n background-color: #1b1b1b;\n color: #8A8A8A;\n}\n",1);
+            jsEditor.setValue('document.getElementById("text").innerHTML = "Hi i am JS !"\n',1);// 1 moves cursor to the end of the text
+            
+            // Tell ace editors that they were resized
+            function resizeEditors(){
+                htmlEditor.resize();
+                cssEditor.resize();
+                jsEditor.resize();
+            }
+            
             // handle buttons actions   
             $("#btn-html").click(function (){
                 $("#html-section").toggle();
+                resizeEditors();
             })
 
             $("#btn-css").click(function (){
                $("#css-section").toggle();
+               resizeEditors();
             })
 
             $("#btn-js").click(function (){
                 $("#js-section").toggle();
+                resizeEditors();
             })
 
             $("#btn-out").click(function (){
                 $("#out-section").toggle();
+                resizeEditors();
             })
 
             // handle on input events and create resulting html
             function updateOutput(){
-                let style = cssEditor.getValue();
-                let html = htmlEditor.getValue();
-                let js = jsEditor.getValue();
-                let site = "<html><head><style type='text/css'>" + style + "</style></head><body>" + html + "</body></html>";
+                let head = "<style type='text/css'>" + cssEditor.getValue(); + "</style>"; 
 
-                $("iframe").contents().find("html").html(site); // add html and css to iframe
-                document.getElementById("output").contentWindow.eval(js); // add js to iframe
+                $("#output").contents().find("head").html(head); // add css to iframe
+                $("#output").contents().find("body").html(htmlEditor.getValue()); // add body of html to iframe
+                try{
+                    document.getElementById("output").contentWindow.eval(jsEditor.getValue()); // add js to iframe
+                }catch(err){
+                    console.log("invalid javascript code")
+                }
             }
 
-            $('textarea').on('input', function() {
-                updateOutput();                
-            });
-
-            updateOutput(); //generate output on site start
+            updateOutput(); //generate output on the start of the site
         </script>
     </body>
 </html>
