@@ -1,6 +1,8 @@
 # Code Player
 A simple code interpreter of HTML, CSS and Javascript :) !
 
+Demo: https://github.com/ls-ramos/code-player.git
+
 ## Structure
 To run the project download the file 'codePlayer.html' and open it with any web browser.
 This project contains a PNG file showing the final result of the project so far.
